@@ -1,0 +1,9 @@
+//Double click command
+animCurveEditor -edit -displayInfinities true graphEditor1GraphEd; optionVar -intValue graphEditorDisplayInfinities true;
+doSetInfinity "-pri cycle" graphEditor1GraphEd "bufferCurve usePin";
+doSetInfinity "-poi cycle" graphEditor1GraphEd "bufferCurve usePin";
+
+//Double click command
+doSetInfinity "-pri constant" graphEditor1GraphEd "bufferCurve usePin";
+doSetInfinity "-poi constant" graphEditor1GraphEd "bufferCurve usePin";
+animCurveEditor -edit -displayInfinities false graphEditor1GraphEd; optionVar -intValue graphEditorDisplayInfinities false;

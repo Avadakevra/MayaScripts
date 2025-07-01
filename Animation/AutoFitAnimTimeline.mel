@@ -1,0 +1,53 @@
+global proc setTimelineByCurveControls()
+{
+    // Get all NURBS curve controls in the scene
+    string $controls[] = `ls -type "nurbsCurve"`;
+    if (size($controls) == 0) {
+        warning "No NURBS curves (controls) found.";
+        return;
+    }
+
+    // Convert shape-nodes to transform-nodes (fullPath)
+    string $transforms[];
+    for ($curve in $controls) {
+        string $parent[] = `listRelatives -parent -fullPath $curve`;
+        if (size($parent) > 0) {
+            $transforms[size($transforms)] = $parent[0];
+        }
+    }
+    $transforms = stringArrayRemoveDuplicates($transforms);
+
+    float $allKeys[] = {};
+    for ($ctrl in $transforms) {
+        // For each keyable attribute of the transform
+        string $attrs[] = `listAttr -k $ctrl`;
+        for ($attr in $attrs) {
+            string $fullAttr = ($ctrl + "." + $attr);
+            if (`objExists $fullAttr`) {
+                float $keys[] = `keyframe -q -timeChange $fullAttr`;
+                for ($k in $keys) {
+                    $allKeys[size($allKeys)] = $k;
+                }
+            }
+        }
+    }
+
+    if (size($allKeys) == 0) {
+        warning "No keys found on controls.";
+        return;
+    }
+
+    float $min = $allKeys[0];
+    float $max = $allKeys[0];
+
+    for ($f in $allKeys) {
+        if ($f < $min) $min = $f;
+        if ($f > $max) $max = $f;
+    }
+
+    playbackOptions -min $min -max $max;
+    playbackOptions -ast $min -aet $max;
+}
+
+// Execute the tool
+setTimelineByCurveControls();

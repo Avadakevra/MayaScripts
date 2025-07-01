@@ -1,0 +1,14 @@
+// Query the current scene name
+string $sceneName = `file -q -sn`;
+
+// Reopen the scene as ASCII, forcing and ignoring version
+file 
+    -open 
+    -force 
+    -ignoreVersion 
+    -type "mayaAscii" 
+    -options "v=0;" 
+    $sceneName;
+
+// Execute the tool
+ReOpenScene();
